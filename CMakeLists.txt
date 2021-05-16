@@ -3,7 +3,7 @@ project(editor)
 
 set(CMAKE_CXX_STANDARD 14)
 set(PROJECT_NAME editor)
-set(SOURCE_FILES main.cpp)
+set(SOURCE_FILES MainApp.cpp MainApp.h MainFrame.cpp MainFrame.h)
 
 find_package(wxWidgets REQUIRED COMPONENTS net core base)
 include(${wxWidgets_USE_FILE})
