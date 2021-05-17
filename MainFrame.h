@@ -3,10 +3,8 @@
 
 #include <wx/richtext/richtextxml.h>
 #include <wx/richtext/richtextctrl.h>
-#include <wx/wxprec.h>
-#ifndef WX_PRECOMP
-    #include <wx/wx.h>
-#endif
+
+#include "InstrumentPanel.h"
 
 class MainFrame : public wxFrame {
 public:
