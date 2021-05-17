@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(PROJECT_NAME editor)
 set(SOURCE_FILES MainApp.cpp MainApp.h MainFrame.cpp MainFrame.h)
 
-find_package(wxWidgets REQUIRED COMPONENTS net core base)
+find_package(wxWidgets REQUIRED COMPONENTS net core base richtext)
 include(${wxWidgets_USE_FILE})
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
