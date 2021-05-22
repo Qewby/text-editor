@@ -2,7 +2,6 @@
 #define EDITOR_MAINFRAME_H
 
 #include <wx/richtext/richtextxml.h>
-#include <wx/richtext/richtextctrl.h>
 
 #include "InstrumentPanel.h"
 
@@ -19,6 +18,7 @@ private:
     wxMenuBar *mpMenuBar;
     wxMenu *mpFileMenu;
     wxRichTextCtrl *mpTextField;
+    InstrumentPanel *mpInstrumentPanel;
 };
 
 
