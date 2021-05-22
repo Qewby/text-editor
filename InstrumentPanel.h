@@ -12,10 +12,14 @@ public:
     InstrumentPanel(wxWindow *parent, wxRichTextCtrl& textField);
 
     void OnBoldButton(wxCommandEvent& event);
+    void OnItalicButton(wxCommandEvent& event);
+    void OnUnderlineButton(wxCommandEvent& event);
 
     DECLARE_EVENT_TABLE()
 private:
     wxButton *mpBoldButton;
+    wxButton *mpItalicButton;
+    wxButton *mpUnderlineButton;
     wxRichTextCtrl& mrTextField;
 };
 
