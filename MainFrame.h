@@ -13,12 +13,17 @@ public:
     void OnMenuFileSave(wxCommandEvent &event);
     void OnMenuFileQuit(wxCommandEvent &event);
 
+    void OnMenuEditCopy(wxCommandEvent &event);
+    void OnMenuEditCut(wxCommandEvent &event);
+    void OnMenuEditPaste(wxCommandEvent &event);
+
     void OnUpdate(wxRichTextEvent &event);
 
     DECLARE_EVENT_TABLE()
 private:
     wxMenuBar *mpMenuBar;
     wxMenu *mpFileMenu;
+    wxMenu *mpEditMenu;
     wxRichTextCtrl *mpTextField;
     InstrumentPanel *mpInstrumentPanel;
 };

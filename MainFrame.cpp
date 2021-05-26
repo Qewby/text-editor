@@ -4,6 +4,10 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(wxID_OPEN, MainFrame::OnMenuFileOpen)
     EVT_MENU(wxID_SAVE, MainFrame::OnMenuFileSave)
     EVT_MENU(wxID_EXIT, MainFrame::OnMenuFileQuit)
+
+    EVT_MENU(wxID_COPY, MainFrame::OnMenuEditCopy)
+    EVT_MENU(wxID_CUT, MainFrame::OnMenuEditCut)
+    EVT_MENU(wxID_PASTE, MainFrame::OnMenuEditPaste)
 END_EVENT_TABLE()
 
 MainFrame::MainFrame(const wxString& title, int xPos, int yPos, int width, int height)
@@ -15,13 +19,20 @@ MainFrame::MainFrame(const wxString& title, int xPos, int yPos, int width, int h
     //Menu bar
     mpMenuBar = new wxMenuBar();
 
+    //File menu
     mpFileMenu = new wxMenu();
     mpFileMenu->Append(wxID_OPEN, _T("&Open"));
     mpFileMenu->Append(wxID_SAVE, _T("&Save"));
     mpFileMenu->Append(wxID_SAVEAS, _T("&Save as"));
     mpFileMenu->Append(wxID_EXIT, _T("&Quit"));
-    mpMenuBar->Append(mpFileMenu, _T("&File"));
+    mpMenuBar->Append(mpFileMenu, _T("File"));
 
+    //Edit menu
+    mpEditMenu = new wxMenu();
+    mpEditMenu->Append(wxID_COPY, _T("&Copy"));
+    mpEditMenu->Append(wxID_CUT, _T("&Cut"));
+    mpEditMenu->Append(wxID_PASTE, _T("&Paste"));
+    mpMenuBar->Append(mpEditMenu, _T("Edit"));
     SetMenuBar(mpMenuBar);
 
     //Window widgets
@@ -70,4 +81,16 @@ void MainFrame::OnMenuFileQuit(wxCommandEvent &event)
 
 void MainFrame::OnUpdate(wxRichTextEvent &event) {
     mpInstrumentPanel->Update();
+}
+
+void MainFrame::OnMenuEditCopy(wxCommandEvent &event) {
+    mpTextField->Copy();
+}
+
+void MainFrame::OnMenuEditCut(wxCommandEvent &event) {
+    mpTextField->Cut();
+}
+
+void MainFrame::OnMenuEditPaste(wxCommandEvent &event) {
+    mpTextField->Paste();
 }
