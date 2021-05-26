@@ -11,6 +11,7 @@ public:
 
     void OnMenuFileOpen(wxCommandEvent &event);
     void OnMenuFileSave(wxCommandEvent &event);
+    void OnMenuFileSaveAs(wxCommandEvent &event);
     void OnMenuFileQuit(wxCommandEvent &event);
 
     void OnMenuEditUndo(wxCommandEvent &event);
@@ -29,6 +30,8 @@ private:
     wxMenu *mpEditMenu;
     wxRichTextCtrl *mpTextField;
     InstrumentPanel *mpInstrumentPanel;
+
+    wxString fileName;
 };
 
 #endif //EDITOR_MAINFRAME_H

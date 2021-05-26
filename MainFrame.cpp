@@ -3,6 +3,7 @@
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(wxID_OPEN, MainFrame::OnMenuFileOpen)
     EVT_MENU(wxID_SAVE, MainFrame::OnMenuFileSave)
+    EVT_MENU(wxID_SAVEAS, MainFrame::OnMenuFileSaveAs)
     EVT_MENU(wxID_EXIT, MainFrame::OnMenuFileQuit)
 
     EVT_MENU(wxID_UNDO, MainFrame::OnMenuEditUndo)
@@ -18,6 +19,8 @@ MainFrame::MainFrame(const wxString& title, int xPos, int yPos, int width, int h
 {
     //Handler for load and saving
     wxRichTextBuffer::AddHandler(new wxRichTextXMLHandler);
+
+    fileName = wxEmptyString;
 
     //Menu bar
     mpMenuBar = new wxMenuBar();
@@ -63,19 +66,30 @@ void MainFrame::OnMenuFileOpen(wxCommandEvent &event)
     wxFileDialog *OpenDialog= new wxFileDialog(this, _T("Choose a file"), _(""), _(""), _("*.xml"), wxFD_OPEN);
     if ( OpenDialog->ShowModal() == wxID_OK )
     {
-        mpTextField->LoadFile(OpenDialog->GetPath(), wxRICHTEXT_TYPE_XML);
+        fileName = OpenDialog->GetPath();
+        mpTextField->LoadFile(fileName, wxRICHTEXT_TYPE_XML);
     }
-    OpenDialog->Close(); // Or OpenDialog->Destroy() ?
+    OpenDialog->Close();
 }
 
 void MainFrame::OnMenuFileSave(wxCommandEvent &event)
 {
+    if (fileName == wxEmptyString) {
+        OnMenuFileSaveAs(event);
+    }
+    else {
+        mpTextField->SaveFile(fileName, wxRICHTEXT_TYPE_XML);
+    }
+}
+
+void MainFrame::OnMenuFileSaveAs(wxCommandEvent &event)
+{
     wxFileDialog *SaveDialog= new wxFileDialog(this, _T("Choose a file"), _(""), _("unnamed"), _("*.xml"), wxFD_SAVE);
     if (SaveDialog->ShowModal() == wxID_OK)
     {
-        wxString name = SaveDialog->GetPath();
-        if (!name.Contains(".xml")) name += ".xml";
-        mpTextField->SaveFile(name, wxRICHTEXT_TYPE_XML);
+        fileName = SaveDialog->GetPath();
+        if (!fileName.Contains(".xml")) fileName += ".xml";
+        mpTextField->SaveFile(fileName, wxRICHTEXT_TYPE_XML);
     }
     SaveDialog->Close();
 }
