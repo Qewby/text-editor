@@ -8,10 +8,11 @@
 #include <wx/richtext/richtextctrl.h>
 #include <wx/clrpicker.h>
 #include <wx/fontenum.h>
+#include <wx/artprov.h>
 
 class InstrumentPanel : public wxPanel {
 public:
-    InstrumentPanel(wxWindow *parent, wxRichTextCtrl& textField);
+    InstrumentPanel(wxWindow *parent, wxRichTextCtrl& textField, int width);
 
     void Update();
     void SetFontSize(int size);

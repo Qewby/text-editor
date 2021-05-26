@@ -21,28 +21,31 @@ BEGIN_EVENT_TABLE(InstrumentPanel, wxPanel)
     EVT_COLOURPICKER_CHANGED(TEXT_BACKGROUND_COLOUR_PICKER_ID, InstrumentPanel::OnTextBackgroundColourChange)
 END_EVENT_TABLE()
 
-InstrumentPanel::InstrumentPanel(wxWindow *parent, wxRichTextCtrl& textField)
-    : mrTextField(textField), wxPanel(parent, wxID_ANY, wxPoint(0, 0), wxSize(800, 50))
+InstrumentPanel::InstrumentPanel(wxWindow *parent, wxRichTextCtrl& textField, int width)
+    : mrTextField(textField), wxPanel(parent, wxID_ANY, wxPoint(0, 0),
+                                      wxSize(width, 50))
     {
         wxBoxSizer *pSizer = new wxBoxSizer(wxHORIZONTAL);
 
-        mpBoldButton = new wxButton(this, wxID_BOLD, _T(""), wxDefaultPosition, wxSize(50, 100));
-        pSizer->Add(mpBoldButton);
-        mpItalicButton = new wxButton(this, wxID_ITALIC, _T(""), wxDefaultPosition, wxSize(50, 100));
-        pSizer->Add(mpItalicButton);
-        mpUnderlineButton = new wxButton(this, wxID_UNDERLINE, _T(""), wxDefaultPosition, wxSize(50, 100));
-        pSizer->Add(mpUnderlineButton);
+        //Bold, italic, underline buttons
+        mpBoldButton = new wxButton(this, wxID_BOLD, wxEmptyString, wxDefaultPosition,
+                                    wxSize(1, 50));
+        mpItalicButton = new wxButton(this, wxID_ITALIC, wxEmptyString, wxDefaultPosition,
+                                      wxSize(1, 50));
+        mpUnderlineButton = new wxButton(this, wxID_UNDERLINE, wxEmptyString, wxDefaultPosition,
+                                         wxSize(1, 50));
 
-        mpAlignLeftButton = new wxButton(this, wxID_JUSTIFY_LEFT, _T(""), wxDefaultPosition, wxSize(50, 100));
-        pSizer->Add(mpAlignLeftButton);
-        mpAlignCenterButton = new wxButton(this, wxID_JUSTIFY_CENTER, _T(""), wxDefaultPosition, wxSize(50, 100));
-        pSizer->Add(mpAlignCenterButton);
-        mpAlignRightButton = new wxButton(this, wxID_JUSTIFY_RIGHT, _T(""), wxDefaultPosition, wxSize(50, 100));
-        pSizer->Add(mpAlignRightButton);
+        //Text alignment buttons
+        mpAlignLeftButton = new wxButton(this, wxID_JUSTIFY_LEFT, wxEmptyString, wxDefaultPosition,
+                                         wxSize(1, 50));
+        mpAlignCenterButton = new wxButton(this, wxID_JUSTIFY_CENTER, wxEmptyString, wxDefaultPosition,
+                                           wxSize(1, 50));
+        mpAlignRightButton = new wxButton(this, wxID_JUSTIFY_RIGHT, wxEmptyString, wxDefaultPosition,
+                                          wxSize(1, 50));
 
-        mpFontBox = new wxComboBox(this, TEXT_FONT_FIELD_ID, _T(""), wxDefaultPosition,
-                                       wxSize(50, 300), wxFontEnumerator::GetFacenames(), wxTE_PROCESS_ENTER);
-        pSizer->Add(mpFontBox, 3);
+        //Font and font size boxes
+        mpFontBox = new wxComboBox(this, TEXT_FONT_FIELD_ID, wxEmptyString, wxDefaultPosition,
+                                   wxSize(1, 50), wxFontEnumerator::GetFacenames(), wxTE_PROCESS_ENTER);
         mFontSizesArray.Add(_T("8"));
         mFontSizesArray.Add(_T("9"));
         mFontSizesArray.Add(_T("10"));
@@ -57,17 +60,35 @@ InstrumentPanel::InstrumentPanel(wxWindow *parent, wxRichTextCtrl& textField)
         mFontSizesArray.Add(_T("60"));
         mFontSizesArray.Add(_T("72"));
         mpFontSizeBox = new wxComboBox(this, TEXT_SIZE_FIELD_ID, _T("10"), wxDefaultPosition,
-                                       wxSize(50, 300), mFontSizesArray, wxTE_PROCESS_ENTER);
-        pSizer->Add(mpFontSizeBox, 3);
-        mpBiggerSizeButton = new wxButton(this, wxID_AUTO_HIGHEST, _T("Bigger"), wxDefaultPosition, wxSize(50, 100));
-        pSizer->Add(mpBiggerSizeButton);
-        mpSmallerSizeButton = new wxButton(this, wxID_AUTO_LOWEST, _T("Lower"), wxDefaultPosition, wxSize(50, 100));
-        pSizer->Add(mpSmallerSizeButton);
+                                       wxSize(1, 50), mFontSizesArray, wxTE_PROCESS_ENTER);
+        mpBiggerSizeButton = new wxButton(this, wxID_AUTO_HIGHEST, wxEmptyString, wxDefaultPosition,
+                                          wxSize(1, 50));
+        mpBiggerSizeButton->SetBitmapLabel(wxArtProvider::GetBitmap(wxART_GO_UP));
+        mpSmallerSizeButton = new wxButton(this, wxID_AUTO_LOWEST, wxEmptyString, wxDefaultPosition,
+                                           wxSize(1, 50));
+        mpSmallerSizeButton->SetBitmapLabel(wxArtProvider::GetBitmap(wxART_GO_DOWN));
 
-        mpTextColourPicker = new wxColourPickerCtrl(this, TEXT_COLOUR_PICKER_ID);
-        pSizer->Add(mpTextColourPicker, 3);
-        mpTextBackgroundColourPicker = new wxColourPickerCtrl(this, TEXT_BACKGROUND_COLOUR_PICKER_ID, *wxWHITE);
-        pSizer->Add(mpTextBackgroundColourPicker, 3);
+        //Text and background colour pickers
+        mpTextColourPicker = new wxColourPickerCtrl(this, TEXT_COLOUR_PICKER_ID, *wxBLACK, wxDefaultPosition,
+                                                    wxSize(1, 50));
+        mpTextBackgroundColourPicker = new wxColourPickerCtrl(this, TEXT_BACKGROUND_COLOUR_PICKER_ID,
+                                                              *wxWHITE, wxDefaultPosition, wxSize(1, 50));
+
+        pSizer->Add(mpBoldButton, 4, wxEXPAND);
+        pSizer->Add(mpItalicButton, 4, wxEXPAND);
+        pSizer->Add(mpUnderlineButton, 6, wxEXPAND);
+        pSizer->AddSpacer(20);
+        pSizer->Add(mpAlignLeftButton, 5, wxEXPAND);
+        pSizer->Add(mpAlignCenterButton, 5, wxEXPAND);
+        pSizer->Add(mpAlignRightButton, 5, wxEXPAND);
+        pSizer->AddSpacer(20);
+        pSizer->Add(mpFontBox, 10, wxEXPAND);
+        pSizer->Add(mpFontSizeBox, 5, wxEXPAND);
+        pSizer->Add(mpBiggerSizeButton, 5, wxEXPAND);
+        pSizer->Add(mpSmallerSizeButton, 5, wxEXPAND);
+        pSizer->AddSpacer(20);
+        pSizer->Add(mpTextColourPicker, 5, wxEXPAND);
+        pSizer->Add(mpTextBackgroundColourPicker, 5, wxEXPAND);
 
         SetSizer(pSizer);
 }

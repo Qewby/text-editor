@@ -27,7 +27,7 @@ MainFrame::MainFrame(const wxString& title, int xPos, int yPos, int width, int h
     //Window widgets
     mpTextField = new wxRichTextCtrl(this, wxID_ANY, wxEmptyString,
                                                      wxPoint(0, 50), wxSize(width, height));
-    mpInstrumentPanel = new InstrumentPanel(this, *mpTextField);
+    mpInstrumentPanel = new InstrumentPanel(this, *mpTextField, width);
 
     wxBoxSizer *pMainSizer = new wxBoxSizer(wxVERTICAL);
     pMainSizer->Add(mpInstrumentPanel, 1, wxEXPAND);
