@@ -48,7 +48,8 @@ private:
     wxColourPickerCtrl *mpTextColourPicker;
     wxColourPickerCtrl *mpTextBackgroundColourPicker;
 
-    wxRichTextCtrl& mrTextField;
+    wxRichTextAttr mCaretStyle;
+    wxRichTextCtrl &mrTextField;
 };
 
 enum {

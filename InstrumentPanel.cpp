@@ -60,7 +60,7 @@ InstrumentPanel::InstrumentPanel(wxWindow *parent, wxRichTextCtrl& textField)
 
         mpTextColourPicker = new wxColourPickerCtrl(this, TEXT_COLOUR_PICKER_ID);
         pSizer->Add(mpTextColourPicker, 3);
-        mpTextBackgroundColourPicker = new wxColourPickerCtrl(this, TEXT_BACKGROUND_COLOUR_PICKER_ID);
+        mpTextBackgroundColourPicker = new wxColourPickerCtrl(this, TEXT_BACKGROUND_COLOUR_PICKER_ID, *wxWHITE);
         pSizer->Add(mpTextBackgroundColourPicker, 3);
 
         SetSizer(pSizer);
@@ -178,8 +178,9 @@ void InstrumentPanel::SetFontSize(int size) {
         mrTextField.SetStyle(range, style);
     }
     else {
-        mrTextField.EndFontSize();
-        mrTextField.BeginFontSize(size);
+        mCaretStyle.SetFontSize(size);
+        mrTextField.EndStyle();
+        mrTextField.BeginStyle(mCaretStyle);
     }
     mrTextField.SetFocus();
 }
@@ -193,8 +194,9 @@ void InstrumentPanel::OnTextColourChange(wxColourPickerEvent &event) {
         mrTextField.SetStyle(range, style);
     }
     else {
-        mrTextField.EndTextColour();
-        mrTextField.BeginTextColour(event.GetColour());
+        mCaretStyle.SetTextColour(event.GetColour());
+        mrTextField.EndStyle();
+        mrTextField.BeginStyle(mCaretStyle);
     }
     mrTextField.SetFocus();
 }
@@ -208,10 +210,9 @@ void InstrumentPanel::OnTextBackgroundColourChange(wxColourPickerEvent &event) {
         mrTextField.SetStyle(range, style);
     }
     else {
-        mrTextField.GetStyle(mrTextField.GetCaretPosition(), style);
-        style.SetBackgroundColour(event.GetColour());
+        mCaretStyle.SetBackgroundColour(event.GetColour());
         mrTextField.EndStyle();
-        mrTextField.BeginStyle(style);
+        mrTextField.BeginStyle(mCaretStyle);
     }
     mrTextField.SetFocus();
 }
@@ -219,10 +220,11 @@ void InstrumentPanel::OnTextBackgroundColourChange(wxColourPickerEvent &event) {
 void InstrumentPanel::Update() {
     wxRichTextAttr style;
     mrTextField.GetStyle(mrTextField.GetCaretPosition(), style);
-    wxString fontSize = wxString::Format(wxT("%i"), style.GetFontSize());
+    mCaretStyle = style;
+    wxString fontSize = wxString::Format(wxT("%i"), mCaretStyle.GetFontSize());
     mpFontSizeBox->SetValue(fontSize);
-    mpTextColourPicker->SetColour(style.GetTextColour());
-    wxColour colour = style.GetBackgroundColour();
+    mpTextColourPicker->SetColour(mCaretStyle.GetTextColour());
+    wxColour colour = mCaretStyle.GetBackgroundColour();
     if (colour != wxNullColour) {
         mpTextBackgroundColourPicker->SetColour(colour);
     }
