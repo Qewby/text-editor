@@ -7,6 +7,7 @@
 #endif
 #include <wx/richtext/richtextctrl.h>
 #include <wx/clrpicker.h>
+#include <wx/fontenum.h>
 
 class InstrumentPanel : public wxPanel {
 public:
@@ -22,6 +23,8 @@ public:
     void OnAlignLeftButton(wxCommandEvent &event);
     void OnAlignRightButton(wxCommandEvent &event);
     void OnAlignCenterButton(wxCommandEvent &event);
+
+    void OnFontChange(wxCommandEvent &event);
 
     void OnBiggerSizeButton(wxCommandEvent &event);
     void OnSmallerSizeButton(wxCommandEvent &event);
@@ -40,10 +43,11 @@ private:
     wxButton *mpAlignCenterButton;
     wxButton *mpAlignRightButton;
 
-    wxButton *mpBiggerSizeButton;
-    wxButton *mpSmallerSizeButton;
+    wxComboBox *mpFontBox;
     wxComboBox *mpFontSizeBox;
     wxArrayString mFontSizesArray;
+    wxButton *mpBiggerSizeButton;
+    wxButton *mpSmallerSizeButton;
 
     wxColourPickerCtrl *mpTextColourPicker;
     wxColourPickerCtrl *mpTextBackgroundColourPicker;
@@ -56,7 +60,8 @@ enum {
     TEXT_FIELD_ID = wxID_HIGHEST + 1,
     TEXT_SIZE_FIELD_ID = wxID_HIGHEST + 2,
     TEXT_COLOUR_PICKER_ID = wxID_HIGHEST + 3,
-    TEXT_BACKGROUND_COLOUR_PICKER_ID = wxID_HIGHEST + 4
+    TEXT_BACKGROUND_COLOUR_PICKER_ID = wxID_HIGHEST + 4,
+    TEXT_FONT_FIELD_ID = wxID_HIGHEST + 5
 };
 
 #endif //EDITOR_INSTRUMENTPANEL_H
