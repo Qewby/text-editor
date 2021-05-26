@@ -9,6 +9,8 @@ BEGIN_EVENT_TABLE(InstrumentPanel, wxPanel)
     EVT_BUTTON(wxID_JUSTIFY_RIGHT, InstrumentPanel::OnAlignRightButton)
     EVT_BUTTON(wxID_AUTO_HIGHEST, InstrumentPanel::OnBiggerSizeButton)
     EVT_BUTTON(wxID_AUTO_LOWEST, InstrumentPanel::OnSmallerSizeButton)
+    EVT_COMBOBOX(TEXT_SIZE_FIELD_ID, InstrumentPanel::OnFontSizeChange)
+    EVT_TEXT_ENTER(TEXT_SIZE_FIELD_ID, InstrumentPanel::OnFontSizeChange)
 END_EVENT_TABLE()
 
 InstrumentPanel::InstrumentPanel(wxWindow *parent, wxRichTextCtrl& textField)
@@ -30,12 +32,26 @@ InstrumentPanel::InstrumentPanel(wxWindow *parent, wxRichTextCtrl& textField)
         mpAlignRightButton = new wxButton(this, wxID_JUSTIFY_RIGHT, _T(""), wxDefaultPosition, wxSize(50, 100));
         pSizer->Add(mpAlignRightButton);
 
-        mpBiggerSizeButton = new wxButton(this, wxID_AUTO_HIGHEST, _T(""), wxDefaultPosition, wxSize(50, 100));
+        mpBiggerSizeButton = new wxButton(this, wxID_AUTO_HIGHEST, _T("Bigger"), wxDefaultPosition, wxSize(50, 100));
         pSizer->Add(mpBiggerSizeButton);
-        mpSmallerSizeButton = new wxButton(this, wxID_AUTO_LOWEST, _T(""), wxDefaultPosition, wxSize(50, 100));
+        mpSmallerSizeButton = new wxButton(this, wxID_AUTO_LOWEST, _T("Lower"), wxDefaultPosition, wxSize(50, 100));
         pSizer->Add(mpSmallerSizeButton);
-        wxStaticText *pTextSize = new wxStaticText(this, TEXT_SIZE_FIELD_ID, "10");
-        pSizer->Add(pTextSize);
+        mFontSizesArray.Add(_T("8"));
+        mFontSizesArray.Add(_T("9"));
+        mFontSizesArray.Add(_T("10"));
+        mFontSizesArray.Add(_T("11"));
+        mFontSizesArray.Add(_T("12"));
+        mFontSizesArray.Add(_T("14"));
+        mFontSizesArray.Add(_T("18"));
+        mFontSizesArray.Add(_T("24"));
+        mFontSizesArray.Add(_T("30"));
+        mFontSizesArray.Add(_T("36"));
+        mFontSizesArray.Add(_T("48"));
+        mFontSizesArray.Add(_T("60"));
+        mFontSizesArray.Add(_T("72"));
+        mpFontSizeBox = new wxComboBox(this, TEXT_SIZE_FIELD_ID, _T("10"), wxDefaultPosition,
+                                       wxSize(50, 300), mFontSizesArray, wxTE_PROCESS_ENTER);
+        pSizer->Add(mpFontSizeBox, 3);
 
         SetSizer(pSizer);
 }
@@ -104,23 +120,63 @@ void InstrumentPanel::OnAlignCenterButton(wxCommandEvent& event) {
 }
 
 void InstrumentPanel::OnBiggerSizeButton(wxCommandEvent& event) {
-    wxRichTextAttr style;
-    if(mrTextField.HasSelection()) {
-        wxRichTextRange range = mrTextField.GetSelectionRange();
-        mrTextField.GetStyleForRange(range, style);
-        style.SetFontSize(style.GetFontSize() + 2);
-        mrTextField.SetStyle(range, style);
-    }
-    else {
-        mrTextField.GetStyle(mrTextField.GetCaretPosition(), style);
-        mrTextField.EndFontSize();
-        mrTextField.BeginFontSize(style.GetFontSize() + 10);
+    long nowFontSize;
+    long fontSize;
+    mpFontSizeBox->GetValue().ToLong(&nowFontSize);
+    int arraySize = mpFontSizeBox->GetStrings().GetCount();
+    int i;
+    for (i = 0; i < arraySize; i++) {
+        mpFontSizeBox->GetString(i).ToLong(&fontSize);
+        if (nowFontSize < fontSize) {
+            SetFontSize(fontSize);
+            mpFontSizeBox->SetValue(mpFontSizeBox->GetString(i));
+            return;
+        }
     }
     mrTextField.SetFocus();
 }
 
 void InstrumentPanel::OnSmallerSizeButton(wxCommandEvent& event) {
-    mrTextField.EndFontSize();
-    mrTextField.BeginFontSize(10);
+    long nowFontSize;
+    long fontSize;
+    mpFontSizeBox->GetValue().ToLong(&nowFontSize);
+    int arraySize = mpFontSizeBox->GetStrings().GetCount();
+    int i;
+    for (i = arraySize - 1; i >= 0; i--) {
+        mpFontSizeBox->GetString(i).ToLong(&fontSize);
+        if (nowFontSize > fontSize) {
+            SetFontSize(fontSize);
+            mpFontSizeBox->SetValue(mpFontSizeBox->GetString(i));
+            return;
+        }
+    }
+    mrTextField.SetFocus();
+}
+
+void InstrumentPanel::OnFontSizeChange(wxCommandEvent &event) {
+    long fontSize;
+    event.GetString().ToLong(&fontSize);
+    SetFontSize(fontSize);
+}
+
+void InstrumentPanel::Update() {
+    wxRichTextAttr style;
+    mrTextField.GetStyle(mrTextField.GetCaretPosition(), style);
+    wxString fontSize = wxString::Format(wxT("%i"), style.GetFontSize());
+    mpFontSizeBox->SetValue(fontSize);
+}
+
+void InstrumentPanel::SetFontSize(int size) {
+    if(mrTextField.HasSelection()) {
+        wxRichTextAttr style;
+        wxRichTextRange range = mrTextField.GetSelectionRange();
+        mrTextField.GetStyleForRange(range, style);
+        style.SetFontSize(size);
+        mrTextField.SetStyle(range, style);
+    }
+    else {
+        mrTextField.EndFontSize();
+        mrTextField.BeginFontSize(size);
+    }
     mrTextField.SetFocus();
 }

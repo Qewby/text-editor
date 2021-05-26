@@ -7,7 +7,7 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 END_EVENT_TABLE()
 
 MainFrame::MainFrame(const wxString& title, int xPos, int yPos, int width, int height)
-    : wxFrame(NULL, -1, title, wxPoint(xPos, yPos), wxSize(width, height))
+    : wxFrame(NULL, TEXT_FIELD_ID, title, wxPoint(xPos, yPos), wxSize(width, height))
 {
     //Handler for load and saving
     wxRichTextBuffer::AddHandler(new wxRichTextXMLHandler);
@@ -34,6 +34,9 @@ MainFrame::MainFrame(const wxString& title, int xPos, int yPos, int width, int h
     pMainSizer->Add(mpTextField, 15, wxEXPAND);
 
     SetSizer(pMainSizer);
+
+    mpTextField->Bind(wxEVT_RICHTEXT_LEFT_CLICK, &MainFrame::OnUpdate, this);
+    mpTextField->Bind(wxEVT_RICHTEXT_CHARACTER, &MainFrame::OnUpdate, this);
 
     mpTextField->SetFocus();
 }
@@ -63,4 +66,8 @@ void MainFrame::OnMenuFileSave(wxCommandEvent &event)
 void MainFrame::OnMenuFileQuit(wxCommandEvent &event)
 {
     Close(false);
+}
+
+void MainFrame::OnUpdate(wxRichTextEvent &event) {
+    mpInstrumentPanel->Update();
 }

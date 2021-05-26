@@ -13,6 +13,8 @@ public:
     void OnMenuFileSave(wxCommandEvent &event);
     void OnMenuFileQuit(wxCommandEvent &event);
 
+    void OnUpdate(wxRichTextEvent &event);
+
     DECLARE_EVENT_TABLE()
 private:
     wxMenuBar *mpMenuBar;
@@ -20,6 +22,5 @@ private:
     wxRichTextCtrl *mpTextField;
     InstrumentPanel *mpInstrumentPanel;
 };
-
 
 #endif //EDITOR_MAINFRAME_H
