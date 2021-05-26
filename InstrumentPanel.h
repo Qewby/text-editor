@@ -15,19 +15,20 @@ public:
     void Update();
     void SetFontSize(int size);
 
-    void OnBoldButton(wxCommandEvent& event);
-    void OnItalicButton(wxCommandEvent& event);
-    void OnUnderlineButton(wxCommandEvent& event);
+    void OnBoldButton(wxCommandEvent &event);
+    void OnItalicButton(wxCommandEvent &event);
+    void OnUnderlineButton(wxCommandEvent &event);
 
-    void OnAlignLeftButton(wxCommandEvent& event);
-    void OnAlignRightButton(wxCommandEvent& event);
-    void OnAlignCenterButton(wxCommandEvent& event);
+    void OnAlignLeftButton(wxCommandEvent &event);
+    void OnAlignRightButton(wxCommandEvent &event);
+    void OnAlignCenterButton(wxCommandEvent &event);
 
-    void OnBiggerSizeButton(wxCommandEvent& event);
-    void OnSmallerSizeButton(wxCommandEvent& event);
-    void OnFontSizeChange(wxCommandEvent& event);
+    void OnBiggerSizeButton(wxCommandEvent &event);
+    void OnSmallerSizeButton(wxCommandEvent &event);
+    void OnFontSizeChange(wxCommandEvent &event);
 
-
+    void OnTextColourChange(wxColourPickerEvent &event);
+    void OnTextBackgroundColourChange(wxColourPickerEvent &event);
 
     DECLARE_EVENT_TABLE()
 private:
@@ -44,12 +45,17 @@ private:
     wxComboBox *mpFontSizeBox;
     wxArrayString mFontSizesArray;
 
+    wxColourPickerCtrl *mpTextColourPicker;
+    wxColourPickerCtrl *mpTextBackgroundColourPicker;
+
     wxRichTextCtrl& mrTextField;
 };
 
 enum {
     TEXT_FIELD_ID = wxID_HIGHEST + 1,
-    TEXT_SIZE_FIELD_ID = wxID_HIGHEST + 2
+    TEXT_SIZE_FIELD_ID = wxID_HIGHEST + 2,
+    TEXT_COLOUR_PICKER_ID = wxID_HIGHEST + 3,
+    TEXT_BACKGROUND_COLOUR_PICKER_ID = wxID_HIGHEST + 4
 };
 
 #endif //EDITOR_INSTRUMENTPANEL_H

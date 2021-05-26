@@ -4,13 +4,18 @@ BEGIN_EVENT_TABLE(InstrumentPanel, wxPanel)
     EVT_BUTTON(wxID_BOLD, InstrumentPanel::OnBoldButton)
     EVT_BUTTON(wxID_ITALIC, InstrumentPanel::OnItalicButton)
     EVT_BUTTON(wxID_UNDERLINE, InstrumentPanel::OnUnderlineButton)
+
     EVT_BUTTON(wxID_JUSTIFY_LEFT, InstrumentPanel::OnAlignLeftButton)
     EVT_BUTTON(wxID_JUSTIFY_CENTER, InstrumentPanel::OnAlignCenterButton)
     EVT_BUTTON(wxID_JUSTIFY_RIGHT, InstrumentPanel::OnAlignRightButton)
+
     EVT_BUTTON(wxID_AUTO_HIGHEST, InstrumentPanel::OnBiggerSizeButton)
     EVT_BUTTON(wxID_AUTO_LOWEST, InstrumentPanel::OnSmallerSizeButton)
     EVT_COMBOBOX(TEXT_SIZE_FIELD_ID, InstrumentPanel::OnFontSizeChange)
     EVT_TEXT_ENTER(TEXT_SIZE_FIELD_ID, InstrumentPanel::OnFontSizeChange)
+
+    EVT_COLOURPICKER_CHANGED(TEXT_COLOUR_PICKER_ID, InstrumentPanel::OnTextColourChange)
+    EVT_COLOURPICKER_CHANGED(TEXT_BACKGROUND_COLOUR_PICKER_ID, InstrumentPanel::OnTextBackgroundColourChange)
 END_EVENT_TABLE()
 
 InstrumentPanel::InstrumentPanel(wxWindow *parent, wxRichTextCtrl& textField)
@@ -52,6 +57,11 @@ InstrumentPanel::InstrumentPanel(wxWindow *parent, wxRichTextCtrl& textField)
         mpFontSizeBox = new wxComboBox(this, TEXT_SIZE_FIELD_ID, _T("10"), wxDefaultPosition,
                                        wxSize(50, 300), mFontSizesArray, wxTE_PROCESS_ENTER);
         pSizer->Add(mpFontSizeBox, 3);
+
+        mpTextColourPicker = new wxColourPickerCtrl(this, TEXT_COLOUR_PICKER_ID);
+        pSizer->Add(mpTextColourPicker, 3);
+        mpTextBackgroundColourPicker = new wxColourPickerCtrl(this, TEXT_BACKGROUND_COLOUR_PICKER_ID);
+        pSizer->Add(mpTextBackgroundColourPicker, 3);
 
         SetSizer(pSizer);
 }
@@ -159,13 +169,6 @@ void InstrumentPanel::OnFontSizeChange(wxCommandEvent &event) {
     SetFontSize(fontSize);
 }
 
-void InstrumentPanel::Update() {
-    wxRichTextAttr style;
-    mrTextField.GetStyle(mrTextField.GetCaretPosition(), style);
-    wxString fontSize = wxString::Format(wxT("%i"), style.GetFontSize());
-    mpFontSizeBox->SetValue(fontSize);
-}
-
 void InstrumentPanel::SetFontSize(int size) {
     if(mrTextField.HasSelection()) {
         wxRichTextAttr style;
@@ -179,4 +182,48 @@ void InstrumentPanel::SetFontSize(int size) {
         mrTextField.BeginFontSize(size);
     }
     mrTextField.SetFocus();
+}
+
+void InstrumentPanel::OnTextColourChange(wxColourPickerEvent &event) {
+    if(mrTextField.HasSelection()) {
+        wxRichTextAttr style;
+        wxRichTextRange range = mrTextField.GetSelectionRange();
+        mrTextField.GetStyleForRange(range, style);
+        style.SetTextColour(event.GetColour());
+        mrTextField.SetStyle(range, style);
+    }
+    else {
+        mrTextField.EndTextColour();
+        mrTextField.BeginTextColour(event.GetColour());
+    }
+    mrTextField.SetFocus();
+}
+
+void InstrumentPanel::OnTextBackgroundColourChange(wxColourPickerEvent &event) {
+    wxRichTextAttr style;
+    if(mrTextField.HasSelection()) {
+        wxRichTextRange range = mrTextField.GetSelectionRange();
+        mrTextField.GetStyleForRange(range, style);
+        style.SetBackgroundColour(event.GetColour());
+        mrTextField.SetStyle(range, style);
+    }
+    else {
+        mrTextField.GetStyle(mrTextField.GetCaretPosition(), style);
+        style.SetBackgroundColour(event.GetColour());
+        mrTextField.EndStyle();
+        mrTextField.BeginStyle(style);
+    }
+    mrTextField.SetFocus();
+}
+
+void InstrumentPanel::Update() {
+    wxRichTextAttr style;
+    mrTextField.GetStyle(mrTextField.GetCaretPosition(), style);
+    wxString fontSize = wxString::Format(wxT("%i"), style.GetFontSize());
+    mpFontSizeBox->SetValue(fontSize);
+    mpTextColourPicker->SetColour(style.GetTextColour());
+    wxColour colour = style.GetBackgroundColour();
+    if (colour != wxNullColour) {
+        mpTextBackgroundColourPicker->SetColour(colour);
+    }
 }
