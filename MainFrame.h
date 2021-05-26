@@ -13,6 +13,9 @@ public:
     void OnMenuFileSave(wxCommandEvent &event);
     void OnMenuFileQuit(wxCommandEvent &event);
 
+    void OnMenuEditUndo(wxCommandEvent &event);
+    void OnMenuEditRedo(wxCommandEvent &event);
+
     void OnMenuEditCopy(wxCommandEvent &event);
     void OnMenuEditCut(wxCommandEvent &event);
     void OnMenuEditPaste(wxCommandEvent &event);

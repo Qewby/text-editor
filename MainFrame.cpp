@@ -5,6 +5,9 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(wxID_SAVE, MainFrame::OnMenuFileSave)
     EVT_MENU(wxID_EXIT, MainFrame::OnMenuFileQuit)
 
+    EVT_MENU(wxID_UNDO, MainFrame::OnMenuEditUndo)
+    EVT_MENU(wxID_REDO, MainFrame::OnMenuEditRedo)
+
     EVT_MENU(wxID_COPY, MainFrame::OnMenuEditCopy)
     EVT_MENU(wxID_CUT, MainFrame::OnMenuEditCut)
     EVT_MENU(wxID_PASTE, MainFrame::OnMenuEditPaste)
@@ -29,6 +32,9 @@ MainFrame::MainFrame(const wxString& title, int xPos, int yPos, int width, int h
 
     //Edit menu
     mpEditMenu = new wxMenu();
+    mpEditMenu->Append(wxID_UNDO, _T("&Undo"));
+    mpEditMenu->Append(wxID_REDO, _T("&Redo"));
+    mpEditMenu->AppendSeparator();
     mpEditMenu->Append(wxID_COPY, _T("&Copy"));
     mpEditMenu->Append(wxID_CUT, _T("&Cut"));
     mpEditMenu->Append(wxID_PASTE, _T("&Paste"));
@@ -89,8 +95,20 @@ void MainFrame::OnMenuEditCopy(wxCommandEvent &event) {
 
 void MainFrame::OnMenuEditCut(wxCommandEvent &event) {
     mpTextField->Cut();
+    mpInstrumentPanel->Update();
 }
 
 void MainFrame::OnMenuEditPaste(wxCommandEvent &event) {
     mpTextField->Paste();
+    mpInstrumentPanel->Update();
+}
+
+void MainFrame::OnMenuEditUndo(wxCommandEvent &event) {
+    mpTextField->Undo();
+    mpInstrumentPanel->Update();
+}
+
+void MainFrame::OnMenuEditRedo(wxCommandEvent &event) {
+    mpTextField->Redo();
+    mpInstrumentPanel->Update();
 }
