@@ -94,48 +94,39 @@ InstrumentPanel::InstrumentPanel(wxWindow *parent, wxRichTextCtrl& textField, in
 }
 
 void InstrumentPanel::OnBoldButton(wxCommandEvent &event) {
-    static bool isBold = false;
     if(mrTextField.HasSelection()) {
         mrTextField.ApplyBoldToSelection();
     }
-    else if (isBold) {
-        isBold = !isBold;
-        while(!mrTextField.EndBold());
+    else if (mrTextField.IsSelectionBold()) {
+        mrTextField.EndBold();
     }
     else {
-        isBold = !isBold;
-        while(!mrTextField.BeginBold());
+        mrTextField.BeginBold();
     }
     mrTextField.SetFocus();
 }
 
 void InstrumentPanel::OnItalicButton(wxCommandEvent &event) {
-    static bool isItalic = false;
     if(mrTextField.HasSelection()) {
         mrTextField.ApplyItalicToSelection();
     }
-    else if (isItalic) {
-        isItalic = !isItalic;
+    else if (mrTextField.IsSelectionItalics()) {
         while(!mrTextField.EndItalic());
     }
     else {
-        isItalic = !isItalic;
         while(!mrTextField.BeginItalic());
     }
     mrTextField.SetFocus();
 }
 
 void InstrumentPanel::OnUnderlineButton(wxCommandEvent &event) {
-    static bool isUnderline = false;
     if(mrTextField.HasSelection()) {
         mrTextField.ApplyUnderlineToSelection();
     }
-    else if (isUnderline) {
-        isUnderline = !isUnderline;
+    else if (mrTextField.IsSelectionUnderlined()) {
         while(!mrTextField.EndUnderline());
     }
     else {
-        isUnderline = !isUnderline;
         while(!mrTextField.BeginUnderline());
     }
     mrTextField.SetFocus();
